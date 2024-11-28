@@ -1,0 +1,234 @@
+/*This page is for styling all pages as a complement to bootstrap*/
+/* https://coolors.co/dad7cd-588157-3a5a40-344e41 */
+
+:root{
+/* CSS HEX */
+--timberwolf: #dad7cdff;
+--fern-green: #588157ff;
+--hunter-green: #3a5a40ff;
+--brunswick-green: #344e41ff;
+
+/* CSS HSL */
+--timberwolf: hsla(46, 15%, 83%, 1);
+--fern-green: hsla(119, 19%, 42%, 1);
+--hunter-green: hsla(131, 22%, 29%, 1);
+--brunswick-green: hsla(150, 20%, 25%, 1);
+}
+
+html * {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    /* font-size: 20px; */
+}
+
+.logo{
+    width: 120px;
+    height: 120px;
+    padding: 0;
+}
+
+.btn-brand{
+    color: var(--timberwolf);
+    font-size: 20px;
+}
+
+#nav{
+    background-color:#344e41ff;
+}
+
+.nav-item a{
+    color: var(--timberwolf);
+    font-size: 20px;
+}
+
+
+#hero{
+    background-image: url(../assets/images/cool-urban-apartment.jpg);
+    /* background: linear-gradient(rgba(0,0,00.500), rgba(0,0,0,0.400), url(../img/porscheHero.jpg)); */
+    background-position: center;
+    background-size: cover;
+}
+#heroTitle{
+ text-align: center;
+ color: var(--brunswick-green);
+ font-size: 3em;
+}
+
+#heroSubtitle{
+text-align: center;
+color: var(--brunswick-green);
+}
+
+#searchBar{
+    text-align: center;
+}
+
+#listingSearch{
+    padding: 20px;
+    padding-right: 500px;
+    font-size: 20px;
+    border-radius: 10px;
+    border-style: none;
+    color: var(--hunter-green);
+}
+
+#listingSearchButton{
+    padding: 28px;
+    width: 125px;
+    background-color: var(--fern-green);
+    color: var(--timberwolf);
+    border-style: none;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+#listingLink{
+    text-align: center;
+    color: var(--fern-green);
+}
+
+
+/*Footer*/
+
+.footerSocials{
+    list-style: none;
+    align-items: center;
+    
+    }
+    
+.footerSocials li{
+    float: left;
+    padding: 15px;
+
+    }
+    
+    
+
+
+/*Listings page*/
+.filterSearch{
+    display: inline-flex;
+    padding: 10px;
+    padding-top: 15px;
+    color: var(--hunter-green);
+
+}
+
+    
+    .filterSearch input{
+        border-radius: 10px;
+        border-style: none;
+        padding: 8px;
+        color: var(--hunter-green);
+        background-color: var(--timberwolf);
+    }
+
+.dropdown{
+    display: inline-flex;
+    padding: 10px;
+    padding-top: 15px;
+}
+
+.btn-filter{
+    background-color: var(--hunter-green);
+    color: var(--timberwolf);
+    border-radius: 10px;
+    padding: 15px;
+    border-style: none;
+    cursor: pointer;}
+/* map/listings */
+#mapImg{
+    width: 45em;
+    height: auto;
+}
+
+.aptImg{
+    width: 50%;
+    float: left;
+}
+
+.card-header{
+    background-color: var(--brunswick-green);
+    color: var(--timberwolf);
+}
+
+#saveListing{
+    background-color: var(--fern-green);
+}
+
+/* sign in */
+#signinTitle{
+    color: var(--brunswick-green);
+}
+
+#box{
+    justify-content:center;
+    text-align: center;
+}
+
+.signInLabel{
+    font-size: 20px;
+    color: var(--hunter-green);
+}
+
+#signinText{
+    color: var(--hunter-green);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: var(--fern-green);
+    padding: 5px;
+}
+
+#signinButton{
+    background-color: var(--hunter-green);
+    color: var(--timberwolf);
+    border-radius: 10px;
+    padding: 15px;
+    border-style: none;
+    cursor: pointer;
+
+}
+
+/* profile */
+#profileInfo{
+    margin-left: 5%;
+    margin-top: 5%;
+} 
+
+#listings{
+    padding-top: 10%;
+    margin-left: 5%;
+}
+
+/* applyForm */
+
+#applyBox{
+    margin-top: 5%;
+    margin-left: 10%;
+}
+
+.backButton{
+    text-decoration: none;
+    color: black;
+    font-weight:bold;
+}
+
+
+/*Footer Card*/
+#footerCard{
+    background-color: var(--brunswick-green);
+    color: var(--timberwolf);
+}
+
+.inputBox{
+    padding: 15px;
+    color: var(--timberwolf);
+    }
+    
+    .inputBox input{
+        border-radius: 10px;
+        border-style: none;
+        padding: 10px;
+        color: var(--hunter-green);
+        background-color: var(--timberwolf);
+    }

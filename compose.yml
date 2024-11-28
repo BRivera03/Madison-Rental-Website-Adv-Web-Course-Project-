@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+  
+  db_admin:
+    image: phpmyadmin
+    container_name: PHPMyAdmin
+    ports:
+      - 8888:80
+  
+  web:
+    container_name: Apache
+    # Build the web server image as needed
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Use a "bind" mount to upate web files withoug rebuilding server
+    volumes:
+      - type: bind
+        source: ./web
+        target: /var/www/html
+    ports:
+      - 8080:80

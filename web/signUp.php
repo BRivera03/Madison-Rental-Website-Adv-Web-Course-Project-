@@ -30,7 +30,22 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     if(!empty($email) && !empty($pass) && !empty($fName) && !empty($lName) && !empty($pNum)){
         //save to database
-        $tenantID = random_num(20);
+        
+    // Remove hyphens from phone number for validation
+    $cleanPNum = str_replace("-", "", $pNum); 
+
+    // Check if the phone number has exactly 10 digits
+    if (strlen($cleanPNum) != 10 || !is_numeric($cleanPNum)) {
+        ?>
+        <script>
+            //redirect to signup to retry
+          alert("Invalid Phone Number")
+          window.location.href = 'signUp.php';
+          </script>
+      <?php        
+      exit;
+    }
+        $tenantID = random_num(9);
         $pass = hash("sha256", $pass);
         $query = "INSERT into tenants (tenant_id,email,password,firstName,lastName,phone) values ('$tenantID','$email','$pass','$fName','$lName','$pNum')";
         $result = mysqli_query($conn, $query);

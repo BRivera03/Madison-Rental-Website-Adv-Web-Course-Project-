@@ -25,7 +25,7 @@ else{
 
 
 
-// Grab data for cart
+// Grab data
 if(isset($_POST['saveListing'])){
   if(isset($_SESSION['tenant_id'])) {
 

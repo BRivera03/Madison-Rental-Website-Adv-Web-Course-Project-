@@ -106,8 +106,8 @@ if(isset($_POST['saveListing'])){
     </div>
 
     <div class="filterSearch">
-    <label>Min Rent:</label>
-        <input type="text" placeholder="Min Rent" name="price" value="1000">
+    <label>Max Rent:</label>
+        <input type="text" name="price">
     </div>
 
     <div class="dropdown" id="bedbathFilter">
@@ -116,9 +116,10 @@ if(isset($_POST['saveListing'])){
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <h6 class="dropdown-header">Bedrooms</h6>
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="bed1" name="bed"/><label class="form-check-label" for="bed1">1+ Bedrooms</label></div></li>
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="2" id="bed2" name="bed"/><label class="form-check-label" for="bed2">2+ Bedrooms</label></div></li>
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="3" id="bed3" name="bed"/><label class="form-check-label" for="bed3">3+ Bedrooms</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="1" id="bed1" name="bed"/><label class="form-check-label" for="bed1">1 Bedroom</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="2" id="bed2" name="bed"/><label class="form-check-label" for="bed2">2 Bedrooms</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="3" id="bed3" name="bed"/><label class="form-check-label" for="bed3">3 Bedrooms</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="4" id="bed4" name="bed"/><label class="form-check-label" for="bed4">4 Bedrooms</label></div></li>
         </ul>
         </div>
         <div class="dropdown" id="bedbathFilter">
@@ -127,9 +128,9 @@ if(isset($_POST['saveListing'])){
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <h6 class="dropdown-header">Bathrooms</h6>
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="bath1" name="bath"/><label class="form-check-label" for="bath1">1+ Bathrooms</label></div></li>
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="2" id="bath2" name="bath"/><label class="form-check-label" for="bath2">2+ Bathrooms</label></div></li>
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="3" id="bath3" name="bath"/><label class="form-check-label" for="bath3">3+ Bathrooms</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="1" id="bath1" name="bath"/><label class="form-check-label" for="bath1">1 Bathrooms</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="2" id="bath2" name="bath"/><label class="form-check-label" for="bath2">2 Bathrooms</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="radio" value="3" id="bath3" name="bath"/><label class="form-check-label" for="bath3">3 Bathrooms</label></div></li>
         </ul>
     </div>
 
@@ -147,10 +148,12 @@ if(isset($_POST['saveListing'])){
         Amenities
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="garage" name="garage"/><label class="form-check-label" for="garage">Garage</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="parking" name="parking"/><label class="form-check-label" for="parking">Parking</label></div></li>
             <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="dish" name="dishwasher"/><label class="form-check-label" for="dishwasher">Dishwasher</label></div></li>
             <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="ac" name="ac"/><label class="form-check-label"  for="ac">A/C</label></div></li>
             <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="heater" name="heater"/><label class="form-check-label"  for="heater">Heater</label></div></li>
+            <li><div class="form-check"><input class="form-check-input" type="checkbox" value="1" id="wd" name="wd"/><label class="form-check-label"  for="wd">Washing&Drying Machine</label></div></li>
+
           </ul>
     </div>
 
@@ -188,26 +191,52 @@ if(isset($_POST['saveListing'])){
         $zip = mysqli_real_escape_string($conn, $_POST['zip']);
 
         $price = $_POST["price"];
-        $bed = $_POST["bed"] ?? 1;
-        $bath = $_POST["bath"] ?? 1;
-        $pets = $_POST["pets"] ?? 0;
-        $ac = $_POST["ac"] ?? 0;
-        $wd = $_POST["wd"] ?? 0;
-        $parking = $_POST["parking"] ?? 0;
-        $garage = $_POST["garage"] ?? 0;
-        $heater = $_POST["heat"] ?? 0;
-        $dishwasher = $_POST["dishwasher"] ?? 0;
+        $bed = isset($_POST["bed"]) ? $_POST["bed"] : null;
+        $bath = isset($_POST["bath"]) ? $_POST["bath"] : null;
+        $pets = isset($_POST["pets"]) ? $_POST["pets"] : null;
+        $ac = isset($_POST["ac"]) ? $_POST["ac"] : null;
+        $wd = isset($_POST["wd"]) ? $_POST["wd"] : null;
+        $parking = isset($_POST["parking"]) ? $_POST["parking"] : null;
+        $heater = isset($_POST["heater"]) ? $_POST["heater"] : null;
+        $dishwasher = isset($_POST["dishwasher"]) ? $_POST["dishwasher"] : null;
        
-        $sql = "SELECT * FROM apartments WHERE
-        zipcode LIKE '$zip%'
-        AND price >= $price
-        AND bedrooms >= $bed 
-        AND bathrooms >= $bath
-        AND pets = $pets
-        AND ac = $ac
-        AND washdry = $wd
-        AND dishwasher = $dishwasher
-        AND heat = $heater";
+        $sql = "SELECT * FROM apartments WHERE 1=1";
+
+        if (!empty($price)) {
+          $sql .= " AND price <= $price";
+        }
+
+        if (!empty($bed)) {
+          $sql .= " AND bedrooms = $bed";
+        }
+
+        if (!empty($bath)) {
+          $sql .= " AND bathrooms = $bath";
+        }
+
+        if (!empty($pets)) {
+          $sql .= " AND pets = $pets";
+        }
+
+        if (!empty($ac)) {
+          $sql .= " AND ac = $ac";
+        }
+
+        if (!empty($wd)) {
+          $sql .= " AND washdry = $wd";
+        }
+
+        if (!empty($parking)) {
+          $sql .= " AND parking = $parking";
+        }
+
+        if (!empty($heater)) {
+          $sql .= " AND heat = $heater";
+        }
+
+        if (!empty($dishwasher)) {
+          $sql .= " AND dishwasher = $dishwasher";
+        }
     
         //echo $sql;
         $result = mysqli_query($conn, $sql);
@@ -217,6 +246,7 @@ if(isset($_POST['saveListing'])){
         if($queryResult > 0){
         if(mysqli_num_rows($result)>0){
             while($apt = mysqli_fetch_assoc($result)){
+              echo $queryResult . " results found";
                 ?>
                 <form method="POST" action="">
                 <input type="hidden" name="apt" value="<?php echo $apt["apartment_id"]; ?>" />     

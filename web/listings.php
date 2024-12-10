@@ -102,12 +102,12 @@ if(isset($_POST['saveListing'])){
     <form id='filterForm' method='POST'>
     <div class="filterSearch">
         <label>Search by Zip Code:</label>
-        <input type="text" placeholder="53719" name="zip">
+        <input type="text" placeholder="53719" name="zip" pattern="!\d{5}$" maxlength="5">
     </div>
 
     <div class="filterSearch">
     <label>Max Rent:</label>
-        <input type="text" name="price">
+        <input type="text" name="price" pattern="^\d*$" maxlength="4">
     </div>
 
     <div class="dropdown" id="bedbathFilter">

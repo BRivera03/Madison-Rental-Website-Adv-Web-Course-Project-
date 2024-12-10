@@ -14,7 +14,7 @@
         //echo "Email: " . $email;
         //echo "Password: " . $pass;
 
-        //$pass = hash("sha256", $pass);
+        $pass = hash("sha256", $pass);
 
         //Verify that email is in database
         $query = $conn->prepare("SELECT * FROM tenants WHERE email=? AND password=?");

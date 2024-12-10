@@ -1,5 +1,5 @@
 <?php
-
+/*
 function random_num($length){
     $test = "";
     if($length < 5)
@@ -14,7 +14,7 @@ function random_num($length){
 
     }
     return $text;
-}
+}*/
 
 
 include("connectDB.php");
@@ -30,33 +30,43 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     
     if(!empty($email) && !empty($pass) && !empty($fName) && !empty($lName) && !empty($pNum)){
         //save to database
-        
-    // Remove hyphens from phone number for validation
-    $cleanPNum = str_replace("-", "", $pNum); 
 
-    // Check if the phone number has exactly 10 digits
-    if (strlen($cleanPNum) != 10 || !is_numeric($cleanPNum)) {
-        ?>
-        <script>
-            //redirect to signup to retry
-          alert("Invalid Phone Number")
-          window.location.href = 'signUp.php';
-          </script>
-      <?php        
-      exit;
-    }
-        $tenantID = random_num(9);
-        $pass = hash("sha256", $pass);
-        $query = "INSERT into tenants (tenant_id,email,password,firstName,lastName,phone) values ('$tenantID','$email','$pass','$fName','$lName','$pNum')";
-        $result = mysqli_query($conn, $query);
-        echo "<h3 class='alerts'>Successfully Created account</h3>";
-        //header("Location: login.php");
-        //die;
-        ?>
-          <script>
-            window.location.href = 'signIn.php';
+        //Remove hyphens from phone number for validation
+        $cleanPNum = str_replace("-", "", $pNum); 
+
+        // Check if the phone number has exactly 10 digits
+        if (strlen($cleanPNum) != 10 || !is_numeric($cleanPNum)) {
+            ?>
+            <script>
+                //redirect to signup to retry
+            alert("Invalid Phone Number")
+            window.location.href = 'signUp.php';
             </script>
-        <?php
+            <?php        
+            exit;
+        } 
+        //$tenantID = random_num(9);
+
+        //check if email already in database
+        $query = "SELECT * FROM tenants where email = '$email'";
+        $result = mysqli_query($conn, $query);
+        if ($result){ //query success T/F
+            if(mysqli_num_rows($result) > 0){ //yes existing email in db
+                echo "There is already an account associated with the email entered.";
+            } else { //no duplicate email
+                $pass = hash("sha256", $pass);
+                $query = "INSERT into tenants (email,password,firstName,lastName,phone) values ('$email','$pass','$fName','$lName','$pNum')";
+                $result = mysqli_query($conn, $query);
+                echo "Successfully Created account";
+                //header("Location: login.php");
+                //die;
+                ?>
+                <script>
+                    window.location.href = 'signIn.php';
+                    </script>
+                <?php
+            }
+        }
     }
     else {
         echo "Please enter some valid information";
@@ -93,10 +103,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                         <a class="nav-link" aria-current="page" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="listings.html">Apartments</a>
+                        <a class="nav-link" href="listings.php">Apartments</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Profile</a>
+                        <a class="nav-link" href="profile.php">Profile</a>
                     </li>
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="#">Sign in</a>
@@ -124,9 +134,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             <input id="signinText" type="text" name="fName"><br><br>
             <label class="signInLabel">Last Name:</label><br><br>
             <input id="signinText" type="text" name="lName"><br><br>
-        
             <label class="signInLabel">Phone Number:</label><br><br>
-            <input id="signinText" type="text" name="phone"><br><br>
+            <input id="signinText" type="text" name="phone" placeholder="608-255-3293"><br><br>
             <input id="signinButton" type="submit" value="Sign up"><br><br>
             <a href="signIn.php" class="link">Already have an account? Click to Log in</a><br><br>
 </form>

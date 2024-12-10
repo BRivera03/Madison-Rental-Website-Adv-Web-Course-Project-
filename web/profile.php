@@ -16,7 +16,7 @@
 
 
   if(isset($_SESSION['tenant_id'])) {
-    //echo "<h3 class='alerts'>Logged In</h3>";
+    echo "<h3 class='alerts'>Logged In</h3>";
   }
 
   else{
@@ -107,28 +107,30 @@
         <br><br>
 
         <h2>Personal Information</h2>
-        <label>First name: </label>
-        <input type='text' value='{$_SESSION['fname']}'>
-        <br><br>
-        <label>Last name: </label>
-        <input type='text' value='{$_SESSION['lname']}'>
-        <br><br>
-        <label>Phone Number: </label>
-        <input type='text' value='{$_SESSION['phone']}'>
-        <br><br>
-        <label>Pets? </label>
-        <input type='radio' name='pets' value='1' ' " . ($_SESSION['pets'] == 1 ? 'checked' : '') . ">
-        <label>Yes</label>
-        <input type='radio' name='pets' value='0' " . ($_SESSION['pets'] == 0 ? 'checked' : '') . ">
-        <label>No</label>
-        <br><br>
-        <label>Income Restricted? </label>
-        <input type='radio' name='incomeR' value='1' ' " . ($_SESSION['income'] == 1 ? 'checked' : '') . ">
-        <label>Yes</label>
-        <input type='radio' name='incomeR' value='0' " . ($_SESSION['income'] == 0 ? 'checked' : '') . ">
-        <label>No</label>
-        <br><br>
-        <button name='personal'>Save Changes</button>
+        <form method='post'>
+          <label>First name: </label>
+          <input type='text' name='fname' value='{$_SESSION['fname']}'>
+          <br><br>
+          <label>Last name: </label>
+          <input type='text' name='lname' value='{$_SESSION['lname']}'>
+          <br><br>
+          <label>Phone Number: </label>
+          <input type='text' name='pnumber' value='{$_SESSION['phone']}'>
+          <br><br>
+          <label>Pets? </label>
+          <input type='radio' name='pets' value='1' " . ((int)$_SESSION['pets'] === 1 ? 'checked' : '') . ">
+          <label>Yes</label>
+          <input type='radio' name='pets' value='0' " . ((int)$_SESSION['pets'] === 0 ? 'checked' : '') . ">
+          <label>No</label>
+          <br><br>
+          <label>Income Restricted? </label>
+          <input type='radio' name='incomeR' value='1' ' " . ((int)$_SESSION['income'] === 1 ? 'checked' : '') . ">
+          <label>Yes</label>
+          <input type='radio' name='incomeR' value='0' " . ((int)$_SESSION['income'] === 0 ? 'checked' : '') . ">
+          <label>No</label>
+          <br><br>
+          <button type='submit' name='personal'>Save Changes</button>
+        </form>
 
     ";
 
@@ -170,38 +172,117 @@
     if (isset($_POST['changes'])) {
       $user = $_POST['username'];
       $pass = $_POST['password'];
-      if ($_POST['username'] != $_SESSION['user'] && $_POST['password'] != $_SESSION['pass']) {
-        //update both pass and user
-        $sql = "UPDATE tenants SET email='$user', `password`='$pass' WHERE tenant_id = $id";
 
-        if ($conn->query($sql) === TRUE) {
-            header("Location: " . $_SERVER['PHP_SELF']); //reloads page
-            echo "Pass and user updated successfully";
+      //check if email already in database
+      $query = "SELECT * FROM tenants where email = '$user'";
+      $result = mysqli_query($conn, $query);
+      if ($result){ //query success T/F
+        if(mysqli_num_rows($result) > 0){ //yes existing email in db
+          $duplicate = true;
         } else {
-            echo "Error updating record: " . $conn->error;
+          $duplicate = false;
         }
-      } elseif ($_POST['password'] != $_SESSION['pass']){
-        //update only pass
-        $sql = "UPDATE tenants SET `password`='$pass' WHERE tenant_id = $id";
+      }
 
-        if ($conn->query($sql) === TRUE) {
-            header("Location: " . $_SERVER['PHP_SELF']);
-            echo "Pass updated successfully";
+      if (!empty($user) && !empty($pass)){
+        if ($user != $_SESSION['user'] && $pass != $_SESSION['pass'] && !$duplicate) {
+          //update both pass and user
+          $pass = hash("sha256", $pass);
+          $sql = "UPDATE tenants SET email='$user', `password`='$pass' WHERE tenant_id = $id";
+  
+          if ($conn->query($sql) === TRUE) {
+              //echo "<h3 class='alerts'>Pass and user updated successfully</h3>";
+              header("Location: " . $_SERVER['PHP_SELF']); //reloads page
+          } else {
+              echo "Error updating record: " . $conn->error;
+          }
+        } elseif ($pass != $_SESSION['pass']){
+          //update only pass
+          $pass = hash("sha256", $pass);
+          $sql = "UPDATE tenants SET `password`='$pass' WHERE tenant_id = $id";
+  
+          if ($conn->query($sql) === TRUE) {
+              //echo "Pass updated successfully";
+              header("Location: " . $_SERVER['PHP_SELF']);
+          } else {
+              echo "Error updating record: " . $conn->error;
+          }
+        } else if ($user != $_SESSION['user'] && !$duplicate){
+          //update only user
+          $sql = "UPDATE tenants SET email='$user' WHERE tenant_id = $id";
+  
+          if ($conn->query($sql) === TRUE) {
+              //echo "User updated successfully";
+              header("Location: " . $_SERVER['PHP_SELF']);
+          } else {
+              echo "Error updating record: " . $conn->error;
+          }
+        } else if ($user == $_SESSION['user'] && $pass == $_SESSION['pass']){
+          echo "<h3 class='alerts'>No Changes made to previous user or pass</h3>";
         } else {
-            echo "Error updating record: " . $conn->error;
-        }
-      } else if ($_POST['username'] != $_SESSION['user']){
-        //update only user
-        $sql = "UPDATE tenants SET email='$user' WHERE tenant_id = $id";
-
-        if ($conn->query($sql) === TRUE) {
-            header("Location: " . $_SERVER['PHP_SELF']);
-            echo "User updated successfully";
-        } else {
-            echo "Error updating record: " . $conn->error;
+          echo "<h3 class='alerts'>Username taken</h3>";
         }
       } else {
-        echo "No changes made to previous user or pass";
+        echo "<h3 class='alerts'>Cannot set values to nothing.</h3>";
+      }
+      
+    }
+
+    if (isset($_POST['personal'])) {
+      $fname = $_POST['fname'];
+      $lname = $_POST['lname'];
+      $phone = $_POST['pnumber'];
+      //radio buttons
+      $pets = isset($_POST["pets"]) ? $_POST["pets"] : null;
+      $incomeR = isset($_POST["incomeR"]) ? $_POST["incomeR"] : null;
+
+      $sql = "UPDATE tenants SET ";
+
+      $setClauses = [];
+
+      if ($fname != $_SESSION['fname'] && !empty($fname)){
+        $setClauses[] = "firstName = '$fname'";
+      }
+
+      if ($lname != $_SESSION['lname'] && !empty($lname)){
+        $setClauses[] = "lastName = '$lname'";
+      }
+
+      if ($phone != $_SESSION['phone'] && !empty($phone)){
+          //phone validation
+          //Remove hyphens from phone number for validation
+          $cleanPNum = str_replace("-", "", $phone); 
+  
+          // Check if the phone number has exactly 10 digits
+          if (strlen($cleanPNum) != 10 || !is_numeric($cleanPNum)) {
+            echo "Invalid phone number";
+          } else {
+            $setClauses[] = "phone = '$phone'";
+          }
+      }
+
+      if ($pets != $_SESSION['pets'] && !is_null($pets)){
+        $setClauses[] = "pets = '$pets'";
+      }
+
+      if ($incomeR != $_SESSION['income'] && !is_null($incomeR)){
+        $setClauses[] = "incomeRestrict = '$incomeR'";
+      }
+
+      if (count($setClauses) > 0){
+        $sql .= implode(", ", $setClauses);
+      } else {
+        echo "No data changed.";
+        $sql = "SELECT * FROM tenants";
+      }
+  
+      $sql .= " WHERE tenant_id = $id";
+      
+      if (mysqli_query($conn, $sql)) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+        //echo "Profile updated successfully!";
+      } else {
+          echo "Error updating profile: " . mysqli_error($conn);
       }
     }
     

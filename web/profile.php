@@ -304,9 +304,8 @@
       while ($row = $result->fetch_assoc()) {
         // Output each listing as a dropdown item
         echo "<li>
-                <a class='dropdown-item' href='#'>
+                <a class='dropdown-item' href='javascript:void(0);'>
                     <div class='form-check'>
-                        <input class='form-check-input' type='checkbox' value='" . $row['apartment_id'] . "' id='listing" . $row['apartment_id'] . "' />
                         <label class='form-check-label' for='listing" . $row['apartment_id'] . "'> Listing #" . $row['apartment_id'] . "</label>
                     </div>
                 </a>
@@ -320,7 +319,7 @@
     echo "
     </ul>
     <br><br>
-    <a href='apply.html'>
+    <a href='apply.php'>
       <button>
         Apply
       </button>

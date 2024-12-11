@@ -102,7 +102,7 @@ if(isset($_POST['saveListing'])){
     <form id='filterForm' method='POST'>
     <div class="filterSearch">
         <label>Search by Zip Code:</label>
-        <input type="text" placeholder="53719" name="zip" pattern="!\d{5}$" maxlength="5">
+        <input type="text" placeholder="53719" name="zip" pattern="^\d{5}$" maxlength="5">
     </div>
 
     <div class="filterSearch">
@@ -188,8 +188,7 @@ if(isset($_POST['saveListing'])){
         //make clear filter swap current values in the select query to the default values
         //make dropdown selections remain through refreshes.
 
-        $zip = mysqli_real_escape_string($conn, $_POST['zip']);
-
+        $zip = $_POST["zip"];
         $price = $_POST["price"];
         $bed = isset($_POST["bed"]) ? $_POST["bed"] : null;
         $bath = isset($_POST["bath"]) ? $_POST["bath"] : null;
@@ -201,6 +200,10 @@ if(isset($_POST['saveListing'])){
         $dishwasher = isset($_POST["dishwasher"]) ? $_POST["dishwasher"] : null;
        
         $sql = "SELECT * FROM apartments WHERE 1=1";
+
+        if (!empty($zip)) {
+          $sql .= " AND zipcode = $zip";
+        }
 
         if (!empty($price)) {
           $sql .= " AND price <= $price";
@@ -245,8 +248,8 @@ if(isset($_POST['saveListing'])){
     
         if($queryResult > 0){
         if(mysqli_num_rows($result)>0){
+          echo $queryResult . " results found";
             while($apt = mysqli_fetch_assoc($result)){
-              echo $queryResult . " results found";
                 ?>
                 <form method="POST" action="">
                 <input type="hidden" name="apt" value="<?php echo $apt["apartment_id"]; ?>" />     
